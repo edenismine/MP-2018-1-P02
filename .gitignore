@@ -1,5 +1,5 @@
 # Compiled class file
-*.class
+#*.class
 
 # Log file
 *.log
@@ -11,17 +11,19 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.ear
 *.zip
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-
-
-# IntelliJ
+# jetbrains stuff
 .idea/
-MP-2018-1-P02.iml
+*.iml
+out/
+
+# dist
+build/
+
+# pandoc
+pandoc.md

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Concentration" basedir="." default="run">
+    <!-- Name of the app -->
+    <property  name="APP" value="Concentration"/>
+
+    <!-- Adding classpath -->
+    <path id="javac2.classpath">
+        <fileset dir="lib">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <!-- Defining javac2 -->
+    <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath" />
+
+    <!-- Compile classes -->
+    <target name="compile">
+        <mkdir dir="build/classes" />
+        <javac2 srcdir="src" destdir="build/classes" classpathref="javac2.classpath" />
+    </target>
+
+    <!-- Create jar file -->
+    <target name="jar" depends="compile">
+        <jar destfile="build/${APP}.jar" basedir="build/classes">
+            <zipgroupfileset dir="lib" includes="*.jar" />
+            <manifest>
+                <attribute name="Main-Class" value="fciencias.myp.concentration.Welcome" />
+            </manifest>
+        </jar>
+    </target>
+
+    <!-- Clean root directory -->
+    <target name="clean">
+        <delete includeemptydirs="true">
+            <fileset dir=".">
+                <include name="*/"/>
+                <exclude name=".idea/"/>
+                <exclude name="src/"/>
+                <exclude name="lib/"/>
+                <exclude name=".gitignore"/>
+                <exclude name="build.xml"/>
+                <exclude name="LICENSE"/>
+                <exclude name="MP-2018-1-P02.iml"/>
+                <exclude name="README.md"/>
+                <exclude name="README.pdf"/>
+            </fileset>
+        </delete>
+    </target>
+
+    <!-- Runs the app -->
+    <target name="run" depends="jar">
+        <java jar="build/${APP}.jar" fork="true"/>
+    </target>
+
+    <!-- Creates a python executable -->
+    <target name="executable" depends="jar">
+        <echo file="./${APP}">#!/usr/bin/env python
+import subprocess, os
+if not os.path.isfile("build/Concentration.jar"):
+    subprocess.call(['ant', 'jar'])
+subprocess.call(['java', '-jar', 'build/${APP}.jar'])
+</echo>
+        <chmod file="./${APP}" perm="+x"/>
+    </target>
+
+    <!-- Creates documentation -->
+    <target name="doc">
+        <mkdir dir="doc"/>
+        <javadoc sourcepath="src" destdir="doc" access="private" windowtitle="Concentration: State Design Pattern implementation"
+                 doctitle="${APP}" author="true" version="true"/>
+    </target>
+
+    <!-- Runs all the tasks -->
+    <target name="all" depends="doc,executable"/>
+</project>
