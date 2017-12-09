@@ -14,14 +14,15 @@
     <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath" />
 
     <!-- Compile classes -->
-    <target name="compile">
+    <target name="compile" depends="clean">
         <mkdir dir="build/classes" />
-        <javac2 srcdir="src" destdir="build/classes" classpathref="javac2.classpath" />
+        <javac2 srcdir="src" destdir="build/classes" classpathref="javac2.classpath" debug="true" debuglevel="lines,vars,source"
+                includeantruntime="false" encoding="UTF-8" />
     </target>
 
     <!-- Create jar file -->
     <target name="jar" depends="compile">
-        <jar destfile="build/${APP}.jar" basedir="build/classes">
+        <jar destfile="build/${APP}.jar" basedir="build/classes" >
             <zipgroupfileset dir="lib" includes="*.jar" />
             <manifest>
                 <attribute name="Main-Class" value="fciencias.myp.concentration.Welcome" />
