@@ -29,6 +29,8 @@
 				<exclude name="src/" />
 				<exclude name="lib/" />
 				<exclude name=".gitignore" />
+				<exclude name=".classpath" />
+				<exclude name=".project" />
 				<exclude name="build.xml" />
 				<exclude name="LICENSE" />
 				<exclude name="MP-2018-1-P02.iml" />
