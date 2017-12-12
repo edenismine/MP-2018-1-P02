@@ -25,7 +25,7 @@
         <jar destfile="build/${APP}.jar" basedir="build/classes" >
             <zipgroupfileset dir="lib" includes="*.jar" />
             <manifest>
-                <attribute name="Main-Class" value="fciencias.myp.concentration.Welcome" />
+                <attribute name="Main-Class" value="fciencias.myp.concentration.PlayConcentration" />
             </manifest>
         </jar>
     </target>

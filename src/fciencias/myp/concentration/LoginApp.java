@@ -4,14 +4,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Properties;
 
 /**
+ * Singleton login screen
+ *
  * @author Daniel Aragon
  * @since 12/8/2017
  */
-public class Welcome extends JFrame {
+public class LoginApp extends JFrame {
     private JPanel mainPanel;
     private JTextField username;
     private JPasswordField password;
@@ -20,25 +26,42 @@ public class Welcome extends JFrame {
     private JLabel output;
     private JTextField[] fields = {username, password};
     private static final Color ERR = new Color(0xE95B62);
-    private static final Color SCC = new Color(0x5DE864);
+    // private static final Color SCC = new Color(0x5DE864);
     private static final Color BGC = new Color(0x303030);
     private static final HashMap<Character, String> REGEX;
     private static final HashMap<Character, String> ERRMessages;
 
     static {
+        Properties prop = new Properties();
+        InputStream input = null;
+        String filename = "src\\fciencias\\myp\\concentration\\settings.properties";
+        try {
+            input = new FileInputStream(filename);
+            // load a properties file
+            prop.load(input);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         REGEX = new HashMap<>();
-        REGEX.put('u', "^(?=.{4,15}$)[a-zA-Z0-9]+(?:_?[a-zA-Z0-9])*$");
-        REGEX.put('p', "^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$");
+        REGEX.put('u', prop.getProperty("username.regexp"));
+        REGEX.put('p', prop.getProperty("password.regexp"));
 
         ERRMessages = new HashMap<>();
-        ERRMessages.put('u', "Only alphanumerical characters and infix underscores are admissible as usernames. " +
-                "Usernames must be at least 4 and at most 15 characters long. ");
-        ERRMessages.put('p', "A strong password must contain lower and upper case letters, special characters and " +
-                "numbers, and be at least 8 characters long. ");
+        ERRMessages.put('u', prop.getProperty("username.error"));
+        ERRMessages.put('p', prop.getProperty("password.error"));
     }
 
-    public Welcome() {
+    private static volatile LoginApp INSTANCE = null;
 
+    private LoginApp() {
         // Change style
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -46,7 +69,7 @@ public class Welcome extends JFrame {
             e.printStackTrace();
         }
 
-        // Components
+        // Format text fields
         for (JComponent field : fields) {
             field.setBorder(javax.swing.BorderFactory.createEmptyBorder());
             field.setMinimumSize(new Dimension(-1, 20));
@@ -54,13 +77,14 @@ public class Welcome extends JFrame {
         username.setName("username");
         password.setName("password");
 
-        // Log in button
+        // Log in button click
         logInButton.addActionListener(e -> logIn(getCredentials()));
 
-        // Sign up button
+        // Sign up button styling
         registerButton.setForeground(Color.white);
         registerButton.setBorder(null);
         registerButton.setBackground(null);
+        // and mouse events
         registerButton.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -143,7 +167,7 @@ public class Welcome extends JFrame {
         output.setForeground(BGC);
 
         // Visits every field
-        for(JTextField field : fields){
+        for (JTextField field : fields) {
             String txt = output.getText();
             String name = field.getName();
             char option = name.charAt(0);
@@ -152,8 +176,8 @@ public class Welcome extends JFrame {
             field.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 
             // If a field doesn't match its corresponding regex, make `valid` false, add corresponding message, modify
-            // the output text and update the field's format
-            if(!field.getText().matches(REGEX.get(option))){
+            // the output text and update the field's style
+            if (!field.getText().matches(REGEX.get(option))) {
                 valid = false;
 
                 // format output label
@@ -169,7 +193,7 @@ public class Welcome extends JFrame {
         }
 
         // If unsuccessful show a dialog
-        if(!valid){
+        if (!valid) {
             JOptionPane.showMessageDialog(this,
                     warning.toString().replace(". ", "\n"),
                     output.getText(), JOptionPane.INFORMATION_MESSAGE);
@@ -186,16 +210,23 @@ public class Welcome extends JFrame {
 
     private void register(String[] credentials) {
         if (credentials != null) {
-            if(checkSecureCredentials()){
+            if (checkSecureCredentials()) {
                 System.out.println(String.format("SIGN UP\nusername:\t%s\npassword:\t%s",
                         credentials[0], credentials[1]));
                 JOptionPane.showMessageDialog(this,
-                        String.format("Welcome, %s.\nYou've been registered, you can now log in.", credentials[0]));
+                        String.format("LoginApp, %s.\nYou've been registered, you can now log in.", credentials[0]));
             }
         }
     }
 
-    public static void main(String[] args) {
-        new Welcome();
+    public static LoginApp getInstance() {
+        if (INSTANCE == null) {
+            synchronized (LoginApp.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new LoginApp();
+                }
+            }
+        }
+        return INSTANCE;
     }
 }
