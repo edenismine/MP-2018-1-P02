@@ -26,6 +26,10 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 
+/**
+ * @author Daniel Aragon
+ *
+ */
 public class LoginPanel {
 
 	private JFrame frame;
@@ -147,12 +151,12 @@ public class LoginPanel {
 
 		JButton buttonLogIn = new JButton("Log in");
 		buttonLogIn.setBounds(177, 166, 65, 23);
-		buttonLogIn.addActionListener(e -> login(getCredentials()));
+		buttonLogIn.addActionListener(e -> login(getFieldsText()));
 		panel.add(buttonLogIn);
 
 		JButton buttonRegister = new JButton("Register");
 		buttonRegister.setBounds(248, 166, 73, 23);
-		buttonRegister.addActionListener(e -> register(getCredentials()));
+		buttonRegister.addActionListener(e -> register(getFieldsText()));
 		panel.add(buttonRegister);
 
 		labelOutput = new JLabel();
@@ -174,84 +178,108 @@ public class LoginPanel {
 
 	}
 
-	private void login(String[] credentials) {
-		if (credentials != null) {
-            System.out.println(String.format("LOG IN\nusername:\t%s\npassword:\t%s",
-                    credentials[0], credentials[1]));
-        }
-    }
-
-	private void register(String[] credentials) {
-        if (credentials != null) {
-            if (checkSecureCredentials()) {
-                System.out.println(String.format("SIGN UP\nusername:\t%s\npassword:\t%s",
-                        credentials[0], credentials[1]));
-                JOptionPane.showMessageDialog(frame,
-                        String.format("LoginApp, %s.\nYou've been registered, you can now log in.", credentials[0]));
-            }
-        }
-    }
-
-	private boolean checkSecureCredentials() {
-		// Setup
-        StringBuilder warning = new StringBuilder();
-        boolean valid = true;
-
-        // Hide output label
-        labelOutput.setText("null");
-        labelOutput.setForeground(BGC);
-
-        // Visits every field
-        JTextField[] fields = { fieldUsername, fieldPassword };
-        for (JTextField field : fields) {
-            String txt = labelOutput.getText();
-            String name = field.getName();
-            char option = name.charAt(0);
-
-            // Reset field's border
-            field.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-
-            // If a field doesn't match its corresponding regex, make `valid` false, add corresponding message, modify
-            // the output text and update the field's style
-            if (!field.getText().matches(REGEX.get(option))) {
-                valid = false;
-
-                // format output label
-                labelOutput.setText(txt.equals("null") ? "Invalid " + name : txt + ", invalid " + name);
-                labelOutput.setForeground(ERR);
-
-                // format field
-                field.setBorder(javax.swing.BorderFactory.createLineBorder(ERR, 1));
-
-                // build warning as necessary
-                warning.append(ERRMessages.get(option));
-            }
-        }
-
-        // If unsuccessful show a dialog
-        if (!valid) {
-            JOptionPane.showMessageDialog(frame,
-                    warning.toString().replace(". ", "\n"),
-                    labelOutput.getText(), JOptionPane.INFORMATION_MESSAGE);
-        }
-        return valid;
-	}
-
-	private String[] getCredentials() {
-		String[] credentials = null;
-		if (!emptyFields()) {
-			credentials = new String[2];
-			credentials[0] = fieldUsername.getText();
-			credentials[1] = new String(fieldPassword.getPassword());
-			labelOutput.setForeground(BGC);
-		} else {
-			labelOutput.setText("Fields cannot be empty.");
-			labelOutput.setForeground(ERR);
+	/**
+	 * Ties to log in using the credentials that correspond to the provided array.
+	 * 
+	 * @param fieldsText
+	 */
+	private void login(String[] fieldsText) {
+		if (fieldsText != null) {
+			System.out.println(String.format("LOG IN\nusername:\t%s\npassword:\t%s", fieldsText[0], fieldsText[1]));
 		}
-		return credentials;
 	}
 
-	private boolean emptyFields() {
+	/**
+	 * Registers the credentials that correspond to the provided array.
+	 * 
+	 * @param fieldsText
+	 */
+	private void register(String[] fieldsText) {
+		if (fieldsText != null) {
+			if (validFields()) {
+				System.out
+						.println(String.format("SIGN UP\nusername:\t%s\npassword:\t%s", fieldsText[0], fieldsText[1]));
+				JOptionPane.showMessageDialog(frame,
+						String.format("LoginApp, %s.\nYou've been registered, you can now log in.", fieldsText[0]));
+			}
+		}
+	}
+
+	/**
+	 * Checks if the fields' content is valid according to its corresponding regex.
+	 * If any of the fields is invalid it shows a message, changes the output label
+	 * and the fields' style.
+	 * 
+	 * @return true if the fields's content is valid, false otherwise
+	 */
+	private boolean validFields() {
+		// Setup
+		StringBuilder warning = new StringBuilder();
+		boolean valid = true;
+
+		// Hide output label
+		labelOutput.setText("null");
+		labelOutput.setForeground(BGC);
+
+		// Visits every field
+		JTextField[] fields = { fieldUsername, fieldPassword };
+		for (JTextField field : fields) {
+			String txt = labelOutput.getText();
+			String name = field.getName();
+			char option = name.charAt(0);
+
+			// Reset field's border
+			field.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+
+			// If a field doesn't match its corresponding regex, make `valid` false, add
+			// corresponding message, modify the output text and update the field's style
+			if (!field.getText().matches(REGEX.get(option))) {
+				valid = false;
+
+				// format output label
+				labelOutput.setText(txt.equals("null") ? "Invalid " + name : txt + ", invalid " + name);
+				labelOutput.setForeground(ERR);
+
+				// format field
+				field.setBorder(javax.swing.BorderFactory.createLineBorder(ERR, 1));
+
+				// build warning as necessary
+				warning.append(ERRMessages.get(option));
+			}
+		}
+
+		// If unsuccessful show a dialog
+		if (!valid) {
+			JOptionPane.showMessageDialog(frame, warning.toString().replace(". ", "\n"), labelOutput.getText(),
+					JOptionPane.INFORMATION_MESSAGE);
+		}
+		return valid;
+	}
+
+	/**
+	 * Extracts the fields' contents.
+	 * 
+	 * @return the fields' contents as an array or null if any of the fields are
+	 *         empty
+	 */
+	private String[] getFieldsText() {
+		String[] fieldsText = null;
+		if (!checkEmptyFields()) {
+			fieldsText = new String[2];
+			fieldsText[0] = fieldUsername.getText();
+			fieldsText[1] = new String(fieldPassword.getPassword());
+			labelOutput.setForeground(BGC);
+		}
+		return fieldsText;
+	}
+
+	/**
+	 * This method checks if any of the form fields is empty, and formats them
+	 * accordingly.
+	 * 
+	 * @return true if any of the fields is empty
+	 */
+	private boolean checkEmptyFields() {
 		LinkedList<Boolean> all = new LinkedList<>();
 		boolean result;
 		JTextField[] fields = { fieldUsername, fieldPassword };
@@ -259,6 +287,8 @@ public class LoginPanel {
 			result = field.getText().isEmpty();
 			if (result) {
 				field.setBorder(javax.swing.BorderFactory.createLineBorder(ERR, 1));
+				labelOutput.setText("Fields cannot be empty.");
+				labelOutput.setForeground(ERR);
 			} else {
 				field.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 			}
