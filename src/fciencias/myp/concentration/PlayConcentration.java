@@ -6,6 +6,6 @@ package fciencias.myp.concentration;
  */
 public class PlayConcentration {
     public static void main(String[] args) {
-        LoginApp.getInstance();
+        LoginPanel.main(args);
     }
 }

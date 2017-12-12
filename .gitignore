@@ -27,3 +27,5 @@ build/
 
 # pandoc
 pandoc.md
+/bin/
+.project
