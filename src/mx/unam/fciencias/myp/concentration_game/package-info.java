@@ -5,4 +5,4 @@
  * @author Luis Daniel Aragon Bermudez 416041271
  * @since 12/5/2017
  */
-package fciencias.myp.concentration;
+package mx.unam.fciencias.myp.concentration_game;

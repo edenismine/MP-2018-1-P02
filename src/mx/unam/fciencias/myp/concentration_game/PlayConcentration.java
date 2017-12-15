@@ -1,4 +1,4 @@
-package fciencias.myp.concentration;
+package mx.unam.fciencias.myp.concentration_game;
 
 /**
  * @author Daniel Aragon

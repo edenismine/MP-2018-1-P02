@@ -1,4 +1,4 @@
-package fciencias.myp.concentration;
+package mx.unam.fciencias.myp.concentration_game;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -25,6 +25,8 @@ import java.util.LinkedList;
 import java.util.Properties;
 
 /**
+ * A simple login panel that handles login and register operations.
+ *
  * @author Daniel Aragon
  */
 public class LoginPanel {

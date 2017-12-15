@@ -15,7 +15,7 @@
 	    <mkdir dir="build/jar"/>
 	    <jar destfile="build/${APP}.jar" basedir="build/classes">
 	       <manifest>
-	       		<attribute name="Main-Class" value="fciencias.myp.concentration.PlayConcentration" />
+	       		<attribute name="Main-Class" value="mx.unam.fciencias.myp.concentration_game.PlayConcentration" />
 	        </manifest>
 	    </jar>
 	</target>
