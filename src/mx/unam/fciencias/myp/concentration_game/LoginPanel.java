@@ -17,12 +17,8 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Toolkit;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Properties;
 
 /**
  * A simple login panel that handles login and register operations.
@@ -30,39 +26,21 @@ import java.util.Properties;
  * @author Daniel Aragon
  */
 public class LoginPanel {
-
-    private static final Color ERR = new Color(0xE95B62);
-    // private static final Color SCC = new Color(0x5DE864);
-    private static final Color BGC = new Color(0x303030);
+    private static final PreLoadedProperties PROPERTIES = PreLoadedProperties.getInstance();
+    // private static final Color C_SUCCESS;
+    private static final Color C_IDLE = new Color(Integer.parseInt(PROPERTIES.getProperty("panel.color.idle"), 16));
+    private static final Color C_ERROR = new Color(Integer.parseInt(PROPERTIES.getProperty("panel.color.error"), 16));
     private static final HashMap<Character, String> REGEX;
-    private static final HashMap<Character, String> ERRMessages;
+    private static final HashMap<Character, String> ERRORS;
 
     static {
-        Properties prop = new Properties();
-        InputStream input = null;
-        String filename = "src\\fciencias\\myp\\concentration\\settings.properties";
-        try {
-            input = new FileInputStream(filename);
-            // load a properties file
-            prop.load(input);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
         REGEX = new HashMap<>();
-        REGEX.put('u', prop.getProperty("username.regexp"));
-        REGEX.put('p', prop.getProperty("password.regexp"));
+        REGEX.put('u', PROPERTIES.getProperty("username.regexp"));
+        REGEX.put('p', PROPERTIES.getProperty("password.regexp"));
 
-        ERRMessages = new HashMap<>();
-        ERRMessages.put('u', prop.getProperty("username.error"));
-        ERRMessages.put('p', prop.getProperty("password.error"));
+        ERRORS = new HashMap<>();
+        ERRORS.put('u', PROPERTIES.getProperty("username.error"));
+        ERRORS.put('p', PROPERTIES.getProperty("password.error"));
     }
 
     private JFrame frame;
@@ -217,7 +195,7 @@ public class LoginPanel {
 
         // Hide output label
         labelOutput.setText("null");
-        labelOutput.setForeground(BGC);
+        labelOutput.setForeground(C_IDLE);
 
         // Visits every field
         JTextField[] fields = {fieldUsername, fieldPassword};
@@ -236,13 +214,13 @@ public class LoginPanel {
 
                 // format output label
                 labelOutput.setText(txt.equals("null") ? "Invalid " + name : txt + ", invalid " + name);
-                labelOutput.setForeground(ERR);
+                labelOutput.setForeground(C_ERROR);
 
                 // format field
-                field.setBorder(javax.swing.BorderFactory.createLineBorder(ERR, 1));
+                field.setBorder(javax.swing.BorderFactory.createLineBorder(C_ERROR, 1));
 
                 // build warning as necessary
-                warning.append(ERRMessages.get(option));
+                warning.append(ERRORS.get(option));
             }
         }
 
@@ -266,7 +244,7 @@ public class LoginPanel {
             fieldsText = new String[2];
             fieldsText[0] = fieldUsername.getText();
             fieldsText[1] = new String(fieldPassword.getPassword());
-            labelOutput.setForeground(BGC);
+            labelOutput.setForeground(C_IDLE);
         }
         return fieldsText;
     }
@@ -284,9 +262,9 @@ public class LoginPanel {
         for (JTextField field : fields) {
             result = field.getText().isEmpty();
             if (result) {
-                field.setBorder(javax.swing.BorderFactory.createLineBorder(ERR, 1));
+                field.setBorder(javax.swing.BorderFactory.createLineBorder(C_ERROR, 1));
                 labelOutput.setText("Fields cannot be empty.");
-                labelOutput.setForeground(ERR);
+                labelOutput.setForeground(C_ERROR);
             } else {
                 field.setBorder(javax.swing.BorderFactory.createEmptyBorder());
             }
