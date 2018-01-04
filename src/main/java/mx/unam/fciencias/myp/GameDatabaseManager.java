@@ -1,21 +1,19 @@
 package mx.unam.fciencias.myp;
 
-import java.sql.Statement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 class GameDatabaseManager {
+    static final int LOGIN_SUCCESSFUL = 0;
+    static final int USER_DOES_NOT_EXIST = 1;
+    static final int WRONG_PASSWORD = 2;
     private static final GameProperties PROPERTIES = GameProperties.getInstance();
     private static final String DATABASE_URL = PROPERTIES.getProperty("database_url");
     private static GameDatabaseManager instance = null;
     private static Connection connection;
     private static boolean hasData = false;
-    static final int LOGIN_SUCCESSFUL = 0;
-    static final int USER_DOES_NOT_EXIST = 1;
-    static final int WRONG_PASSWORD = 2;
+
+    private GameDatabaseManager() {
+    }
 
     static GameDatabaseManager getInstance() {
         if (instance == null) {
@@ -28,11 +26,9 @@ class GameDatabaseManager {
         return instance;
     }
 
-    private GameDatabaseManager(){}
-
     private void getConnection() throws SQLException {
         // Class.forName("org.sqlite.JDBC");
-        if(connection == null){
+        if (connection == null) {
             connection = DriverManager.getConnection(DATABASE_URL);
             connection.setAutoCommit(true);
             initialize();
@@ -46,7 +42,7 @@ class GameDatabaseManager {
             Statement getUsersTableStatement = connection.createStatement();
             ResultSet resultSet = getUsersTableStatement.executeQuery(getUsersTable);
             if (!resultSet.next()) {
-                String createTable = "CREATE TABLE users (" 
+                String createTable = "CREATE TABLE users ("
                         + "username TEXT NOT NULL PRIMARY KEY, "
                         + "password TEXT NOT NULL, "
                         + "games INTEGER NOT NULL DEFAULT 0, "
@@ -67,7 +63,7 @@ class GameDatabaseManager {
         getUserStatement.setString(1, username);
         getUserStatement.execute();
         ResultSet resultSet = getUserStatement.getResultSet();
-        if(resultSet.next()){
+        if (resultSet.next()) {
             return false;
         }
 
@@ -87,9 +83,9 @@ class GameDatabaseManager {
         getUserStatement.setString(1, username);
         getUserStatement.execute();
         ResultSet resultSet = getUserStatement.getResultSet();
-        if(!resultSet.next()){
+        if (!resultSet.next()) {
             return USER_DOES_NOT_EXIST;
-        } else if (!resultSet.getString("password").equals(password)){
+        } else if (!resultSet.getString("password").equals(password)) {
             return WRONG_PASSWORD;
         } else {
             return LOGIN_SUCCESSFUL;
@@ -103,15 +99,15 @@ class GameDatabaseManager {
         getUserStatement.setString(1, username);
         getUserStatement.execute();
         ResultSet resultSet = getUserStatement.getResultSet();
-        if(!resultSet.next()){
+        if (!resultSet.next()) {
             return "Something went wrong, errorcode: " + USER_DOES_NOT_EXIST + " user does not exist.";
         } else {
             int games = resultSet.getInt("games");
             int won = resultSet.getInt("won");
             String stats = String.format("You've played %d times", games);
-            if(games == 0){
+            if (games == 0) {
                 stats = "You haven't played the game yet!\nStart a new game and come back to track your progress.";
-            } else if (won == 0){
+            } else if (won == 0) {
                 stats += ", but you haven't won yet. Keep playing! You'll get better with time.";
             } else if (games == won) {
                 stats += ", and you've won every time! You're awesome!";
@@ -123,9 +119,9 @@ class GameDatabaseManager {
         }
     }
 
-    void updateStats(String username, boolean playerWon) throws SQLException{
+    void updateStats(String username, boolean playerWon) throws SQLException {
         getConnection();
-        if(playerWon){
+        if (playerWon) {
             String incrementWon = "UPDATE users SET won = won + 1 WHERE username==?;";
             PreparedStatement incrementWonStatement = connection.prepareStatement(incrementWon);
             incrementWonStatement.setString(1, username);
@@ -137,7 +133,7 @@ class GameDatabaseManager {
         incrementGamesStatement.execute();
     }
 
-    void resetStats(String username) throws SQLException{
+    void resetStats(String username) throws SQLException {
         getConnection();
         String resetStats = "UPDATE users SET games = 0, won = 0 WHERE username==?;";
         PreparedStatement resetStatsStatement = connection.prepareStatement(resetStats);

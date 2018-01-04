@@ -1,7 +1,6 @@
 package mx.unam.fciencias.myp;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -39,10 +38,6 @@ public class LoginPanel extends JDialog {
     private JTextField fieldUsername;
     private JPasswordField fieldPassword;
     private JLabel labelOutput;
-
-    static void lock(Frame owner) {
-        new LoginPanel(owner);
-    }
 
     /**
      * Initialize the contents of the dialog.
@@ -179,6 +174,10 @@ public class LoginPanel extends JDialog {
         toFront();
     }
 
+    static void lock(Frame owner) {
+        new LoginPanel(owner);
+    }
+
     /**
      * Tries to log in using the credentials inside the provided array.
      *
@@ -202,62 +201,62 @@ public class LoginPanel extends JDialog {
             String message;
 
             switch (authenticate) {
-            case GameDatabaseManager.LOGIN_SUCCESSFUL:
-                message = String.format("Welcome, %s!", fieldsText[0]);
-                // format output label
-                labelOutput.setText(message);
-                labelOutput.setForeground(C_SUCC);
+                case GameDatabaseManager.LOGIN_SUCCESSFUL:
+                    message = String.format("Welcome, %s!", fieldsText[0]);
+                    // format output label
+                    labelOutput.setText(message);
+                    labelOutput.setForeground(C_SUCC);
 
-                // format fields
-                fieldUsername.setBorder(javax.swing.BorderFactory.createLineBorder(C_SUCC, 1));
-                fieldPassword.setBorder(javax.swing.BorderFactory.createLineBorder(C_SUCC, 1));
+                    // format fields
+                    fieldUsername.setBorder(javax.swing.BorderFactory.createLineBorder(C_SUCC, 1));
+                    fieldPassword.setBorder(javax.swing.BorderFactory.createLineBorder(C_SUCC, 1));
 
-                // welcome user
-                JOptionPane.showMessageDialog(this, message, "Welcome!", JOptionPane.INFORMATION_MESSAGE);
+                    // welcome user
+                    JOptionPane.showMessageDialog(this, message, "Welcome!", JOptionPane.INFORMATION_MESSAGE);
 
-                // go to owner
-                success = true;
-                this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-                break;
-            case GameDatabaseManager.USER_DOES_NOT_EXIST:
-                message = String.format("'%s' does not exist!", fieldsText[0]);
-                // format output label
-                labelOutput.setText(message);
-                labelOutput.setForeground(C_ERROR);
+                    // go to owner
+                    success = true;
+                    this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+                    break;
+                case GameDatabaseManager.USER_DOES_NOT_EXIST:
+                    message = String.format("'%s' does not exist!", fieldsText[0]);
+                    // format output label
+                    labelOutput.setText(message);
+                    labelOutput.setForeground(C_ERROR);
 
-                // format fields
-                fieldUsername.setBorder(javax.swing.BorderFactory.createLineBorder(C_ERROR, 1));
-                fieldPassword.setBorder(javax.swing.BorderFactory.createLineBorder(C_ERROR, 1));
+                    // format fields
+                    fieldUsername.setBorder(javax.swing.BorderFactory.createLineBorder(C_ERROR, 1));
+                    fieldPassword.setBorder(javax.swing.BorderFactory.createLineBorder(C_ERROR, 1));
 
-                // communicate error to user
-                JOptionPane.showMessageDialog(this, message, "Unable to log in", JOptionPane.WARNING_MESSAGE);
-                break;
-            case GameDatabaseManager.WRONG_PASSWORD:
-                message = "Incorrect password!";
-                // format output label
-                labelOutput.setText(message);
-                labelOutput.setForeground(C_ERROR);
+                    // communicate error to user
+                    JOptionPane.showMessageDialog(this, message, "Unable to log in", JOptionPane.WARNING_MESSAGE);
+                    break;
+                case GameDatabaseManager.WRONG_PASSWORD:
+                    message = "Incorrect password!";
+                    // format output label
+                    labelOutput.setText(message);
+                    labelOutput.setForeground(C_ERROR);
 
-                // format fields
-                fieldUsername.setBorder(javax.swing.BorderFactory.createLineBorder(C_ERROR, 1));
-                fieldPassword.setBorder(javax.swing.BorderFactory.createLineBorder(C_ERROR, 1));
+                    // format fields
+                    fieldUsername.setBorder(javax.swing.BorderFactory.createLineBorder(C_ERROR, 1));
+                    fieldPassword.setBorder(javax.swing.BorderFactory.createLineBorder(C_ERROR, 1));
 
-                // communicate error to user
-                JOptionPane.showMessageDialog(this, message, "Unable to log in", JOptionPane.WARNING_MESSAGE);
-                break;
-            default:
-                message = String.format("Unkown error code %d", authenticate);
-                // format output label
-                labelOutput.setText(message);
-                labelOutput.setForeground(C_ERROR);
+                    // communicate error to user
+                    JOptionPane.showMessageDialog(this, message, "Unable to log in", JOptionPane.WARNING_MESSAGE);
+                    break;
+                default:
+                    message = String.format("Unkown error code %d", authenticate);
+                    // format output label
+                    labelOutput.setText(message);
+                    labelOutput.setForeground(C_ERROR);
 
-                // format fields
-                fieldUsername.setBorder(javax.swing.BorderFactory.createLineBorder(C_ERROR, 1));
-                fieldPassword.setBorder(javax.swing.BorderFactory.createLineBorder(C_ERROR, 1));
+                    // format fields
+                    fieldUsername.setBorder(javax.swing.BorderFactory.createLineBorder(C_ERROR, 1));
+                    fieldPassword.setBorder(javax.swing.BorderFactory.createLineBorder(C_ERROR, 1));
 
-                // communicate error to user
-                JOptionPane.showMessageDialog(this, message, "Unable to log in", JOptionPane.WARNING_MESSAGE);
-                break;
+                    // communicate error to user
+                    JOptionPane.showMessageDialog(this, message, "Unable to log in", JOptionPane.WARNING_MESSAGE);
+                    break;
             }
         }
     }
@@ -273,7 +272,7 @@ public class LoginPanel extends JDialog {
                 try {
                     if (DB.addUser(fieldsText[0], fieldsText[1])) {
                         JOptionPane.showMessageDialog(this, String
-                                .format("Welcome, %s.\nYou've been registered, you can now log in.", fieldsText[0]),
+                                        .format("Welcome, %s.\nYou've been registered, you can now log in.", fieldsText[0]),
                                 "Success!", JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(this,
@@ -306,7 +305,7 @@ public class LoginPanel extends JDialog {
         labelOutput.setForeground(C_IDLE);
 
         // Visits every field
-        JTextField[] fields = { fieldUsername, fieldPassword };
+        JTextField[] fields = {fieldUsername, fieldPassword};
         for (JTextField field : fields) {
             String txt = labelOutput.getText();
             String name = field.getName();
@@ -366,7 +365,7 @@ public class LoginPanel extends JDialog {
     private boolean checkEmptyFields() {
         LinkedList<Boolean> all = new LinkedList<>();
         boolean result;
-        JTextField[] fields = { fieldUsername, fieldPassword };
+        JTextField[] fields = {fieldUsername, fieldPassword};
         for (JTextField field : fields) {
             result = field.getText().isEmpty();
             if (result) {

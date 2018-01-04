@@ -1,12 +1,7 @@
 package mx.unam.fciencias.myp;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagLayout;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 public class MemoryCard extends JPanel {
     private static final GameProperties PROPERTIES = GameProperties.getInstance();
@@ -41,14 +36,14 @@ public class MemoryCard extends JPanel {
         setPreferredSize(dim);
         setMinimumSize(dim);
         setMaximumSize(dim);
-        
+
     }
 
-    public void place(int x, int y){
+    public void place(int x, int y) {
         setLocation(x, y);
     }
 
-    public char getSymbol(){
+    public char getSymbol() {
         return symbol.getText().charAt(0);
     }
 

@@ -6,18 +6,20 @@ repositories {
     mavenCentral()
 }
 
-dependencies{
+dependencies {
     compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.8.11.2'
 }
 
-javadoc{
+javadoc {
     options.memberLevel = JavadocMemberLevel.PRIVATE
 }
 
 jar {
     manifest {
         attributes(
-                'Class-Path': configurations.compile.files.collect { it.getName() }.join(' '),
+                'Class-Path': configurations.compile.files.collect {
+                    it.getName()
+                }.join(' '),
                 'Main-Class': mainClassName
         )
     }

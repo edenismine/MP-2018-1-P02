@@ -10,8 +10,8 @@ import java.util.*;
 
 class Concentration extends JFrame {
     private static final Dimension defaultSize = new Dimension(500, 500);
-    private static final Character[] defaultCharacters = { '\u2600', '\u2709', '\u25c6', '\u260e', '\u2708', '\u2764',
-            '\u265a', '\u2601' };
+    private static final Character[] defaultCharacters = {'\u2600', '\u2709', '\u25c6', '\u260e', '\u2708', '\u2764',
+            '\u265a', '\u2601'};
     private static final int BOARD_SIDE = 4;
     private final JLabel output;
     private JPanel contentPane;
@@ -132,12 +132,12 @@ class Concentration extends JFrame {
         play();
     }
 
-    static boolean playNewGame(){
+    static boolean playNewGame() {
         return new Concentration().playerWon();
     }
 
     private boolean playerWon() {
-        if(!played){
+        if (!played) {
             throw new IllegalStateException("Game has not finished playing");
         }
         return won;

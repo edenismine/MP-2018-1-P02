@@ -58,7 +58,7 @@ public class GameProperties {
     /**
      * Searches for the property with the specified key in this property list. If the key is not found in this property list, the default property list, and its defaults, recursively, are then checked. The method returns the default value argument if the property is not found.
      *
-     * @param key the hashtable key.
+     * @param key          the hashtable key.
      * @param defaultValue a default value.
      * @return the value in this property list with the specified key value.
      */
