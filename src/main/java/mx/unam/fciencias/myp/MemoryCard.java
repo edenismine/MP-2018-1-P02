@@ -1,67 +1,88 @@
-package mx.unam.fciencias.myp.concentration_game;
+package mx.unam.fciencias.myp;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagLayout;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 public class MemoryCard extends JPanel {
-    private static final PreLoadedProperties PROPERTIES = PreLoadedProperties.getInstance();
+    private static final GameProperties PROPERTIES = GameProperties.getInstance();
     private static final Color C_DOWN = new Color(Integer.parseInt(PROPERTIES.getProperty("card.color.bg"), 16));
     private static final Color C_UP = new Color(Integer.parseInt(PROPERTIES.getProperty("card.color.fg"), 16));
     private final JLabel symbol;
-    private MemoryCardState context;
+    private final MemoryCardState memoryCardFacingUp;
+    private final MemoryCardState memoryCardFacingDown;
+    private final MemoryCardState memoryCardFound;
+    private MemoryCardState memoryCardState;
 
-    public MemoryCard(char symbol) {
+    private MemoryCard(char symbol) {
         super();
+        setBorder(BorderFactory.createLineBorder(Color.white, 5));
+
+        setLayout(new GridBagLayout());
+        memoryCardFacingUp = new FacingUpState();
+        memoryCardFacingDown = new FacingDownState();
+        memoryCardFound = new FoundState();
+
         this.symbol = new JLabel(String.valueOf(symbol));
-        this.setState(getDownState());
+        this.symbol.setFont(new Font(null, Font.PLAIN, 60));
+        this.symbol.setForeground(C_DOWN);
+        add(this.symbol);
+        setState(getUpState());
     }
 
-    public MemoryCard(char symbol, int x, int y, int width, int height) {
+    MemoryCard(char symbol, int width, int height) {
         this(symbol);
-        this.setPreferredSize(new Dimension(width, height));
-        this.setLocation(x, y);
+        Dimension dim = new Dimension(width, height);
+        setSize(dim);
+        setPreferredSize(dim);
+        setMinimumSize(dim);
+        setMaximumSize(dim);
+        
     }
 
-    public MemoryCard(char symbol, int width, int height) {
-        this(symbol);
-        this.setPreferredSize(new Dimension(width, height));
+    public void place(int x, int y){
+        setLocation(x, y);
     }
 
     public char getSymbol(){
-        return this.symbol.getText().charAt(0);
+        return symbol.getText().charAt(0);
     }
 
     boolean choose() {
-        return this.context.choose();
+        return memoryCardState.choose();
     }
 
     void setFacingUp() {
-        this.context.setFaceUp();
+        memoryCardState.setFaceUp();
     }
 
     void setFacingDown() {
-        this.context.setFaceDown();
+        memoryCardState.setFaceDown();
     }
 
     void setFound() {
-        this.context.setFound();
+        memoryCardState.setFound();
     }
 
     private void setState(MemoryCardState newState) {
-        this.context = newState;
-        this.context.format();
+        memoryCardState = newState;
+        memoryCardState.format();
     }
 
     private MemoryCardState getUpState() {
-        return new FacingUpState();
+        return memoryCardFacingUp;
     }
 
     private MemoryCardState getDownState() {
-        return new FacingDownState();
+        return memoryCardFacingDown;
     }
 
     private MemoryCardState getFoundState() {
-        return new FoundState();
+        return memoryCardFound;
     }
 
     private interface MemoryCardState {
@@ -101,7 +122,6 @@ public class MemoryCard extends JPanel {
         @Override
         public void format() {
             setBackground(C_UP);
-            symbol.setVisible(true);
         }
     }
 
@@ -130,7 +150,6 @@ public class MemoryCard extends JPanel {
         @Override
         public void format() {
             setBackground(C_DOWN);
-            symbol.setVisible(false);
         }
     }
 
