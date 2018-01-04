@@ -1,34 +1,26 @@
-# Compiled class file
-#*.class
+# Java build artifacts class files
+*.class
 
-# Log file
-*.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files
-*.war
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# jetbrains stuff
-.idea/
-*.iml
-out/
-
-# dist
-build/
-
-# pandoc
-pandoc.md
-
-# Eclipse
+# other generated files
 bin/
-.project
+gen/
+build/
+out/
+game.db
+
+# Eclipse project files
 .classpath
+.project
+
+# JetBrains
+*.iml
+.idea/
+.gradle/
+
+
+#NDK
+obj/
+
+# Pandoc
+pandoc.md
+metadata.yaml
