@@ -119,7 +119,6 @@ class Concentration extends JFrame {
                 });
                 this.cards[i][j] = card; // card dimensions
                 board.add(card);
-                card.place(i * cardWidth, j * cardHeight);
             }
         }
 
@@ -179,10 +178,10 @@ class Concentration extends JFrame {
         selected = null;
         while (selected == null) {
             card = cards[i][j];
-            if (card.choose()) {
+            if (card.select()) {
                 selected = card;
             } else {
-                output.setText("You can't choose a card that is facing up.");
+                output.setText("You can't select a card that is facing up.");
                 return;
             }
         }

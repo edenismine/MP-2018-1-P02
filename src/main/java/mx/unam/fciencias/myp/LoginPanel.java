@@ -18,9 +18,12 @@ import java.util.LinkedList;
 public class LoginPanel extends JDialog {
     private static final GameProperties PROPERTIES = GameProperties.getInstance();
     private static final GameDatabaseManager DB = GameDatabaseManager.getInstance();
-    private static final Color C_IDLE = new Color(Integer.parseInt(PROPERTIES.getProperty("color.idle"), 16));
-    private static final Color C_ERROR = new Color(Integer.parseInt(PROPERTIES.getProperty("color.error"), 16));
-    private static final Color C_SUCC = new Color(Integer.parseInt(PROPERTIES.getProperty("color.succ"), 16));
+    private static final Color C_IDLE = new Color(Integer.parseInt
+            (PROPERTIES.getProperty("color.idle"), 16));
+    private static final Color C_ERROR = new Color(Integer.parseInt
+            (PROPERTIES.getProperty("color.error"), 16));
+    private static final Color C_SUCCESS = new Color(Integer.parseInt
+            (PROPERTIES.getProperty("color.success"), 16));
     private static final HashMap<Character, String> REGEX;
     private static final HashMap<Character, String> ERRORS;
     private static boolean success = false;
@@ -205,11 +208,11 @@ public class LoginPanel extends JDialog {
                     message = String.format("Welcome, %s!", fieldsText[0]);
                     // format output label
                     labelOutput.setText(message);
-                    labelOutput.setForeground(C_SUCC);
+                    labelOutput.setForeground(C_SUCCESS);
 
                     // format fields
-                    fieldUsername.setBorder(javax.swing.BorderFactory.createLineBorder(C_SUCC, 1));
-                    fieldPassword.setBorder(javax.swing.BorderFactory.createLineBorder(C_SUCC, 1));
+                    fieldUsername.setBorder(javax.swing.BorderFactory.createLineBorder(C_SUCCESS, 1));
+                    fieldPassword.setBorder(javax.swing.BorderFactory.createLineBorder(C_SUCCESS, 1));
 
                     // welcome user
                     JOptionPane.showMessageDialog(this, message, "Welcome!", JOptionPane.INFORMATION_MESSAGE);

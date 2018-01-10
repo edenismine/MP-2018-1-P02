@@ -5,15 +5,30 @@ import java.awt.*;
 import java.sql.SQLException;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * The Home page of the game.
+ *
+ * The user can select any of the following options:
+ * <ol>
+ * <li>Start a new game.</li>
+ * <li>View the player's stats.</li>
+ * <li>Reset the player's stats.</li>
+ * <li>Exit the program.</li>
+ * </ol>
+ */
 class HomePage extends JFrame {
     /**
      * Generated serialVersionUID
      */
     private static final long serialVersionUID = -6831370209295904244L;
+    /**
+     * Reference to the game's database manager.
+     */
     private static final GameDatabaseManager DB = GameDatabaseManager.getInstance();
 
     HomePage() {
         super();
+        // initial settings
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
@@ -51,14 +66,16 @@ class HomePage extends JFrame {
             worker.execute();
         });
         MenuOption gameStatsButton = new MenuOption(MenuOption.OptionType.STATS, () -> {
-            String message = "Something went wrong, could not retrieve game stats for " + getName();
+            String message = "Something went wrong, could not retrieve game stats for "
+                    + getName();
             try {
                 message = DB.getStats(getName());
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            JOptionPane.showMessageDialog(this, message, getName() + "'s game stats", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, message,getName()
+                    + "'s game stats", JOptionPane.INFORMATION_MESSAGE);
         });
         MenuOption resetStatsButton = new MenuOption(MenuOption.OptionType.CLEAR, () -> {
             int n = JOptionPane.showConfirmDialog(thisPage, "Are you sure you want to reset your game stats? All your progress will be lost and it cannot be undone.", "Reset stats",
